@@ -1,14 +1,7 @@
-<!--=====================================
-Home Deal Hot Today
-======================================-->
-
 <div class="ps-deal-hot">
   <div class="container">
     <div class="row">
-      <!--=====================================
-    Column Deal Hot
-    ======================================-->
-
+      <!--
       <div class="col-xl-9 col-12">
         <div *ngIf="!cargando" class="ps-block--deal-hot" data-mh="dealhot">
           <div class="ps-block__header">
@@ -41,9 +34,6 @@ Home Deal Hot Today
               data-owl-duration="1000"
               data-owl-mousedrag="on"
             >
-              <!--=====================================
-            Product Deal Home
-            ======================================-->
               <div
                 *ngFor="let i of indexes; let lastIndex = last"
                 class="ps-product--detail ps-product--hot-deal"
@@ -158,23 +148,47 @@ Home Deal Hot Today
 
                 {{ lastIndex ? callback() : "" }}
               </div>
-              <!-- End Product Deal Hot -->
             </div>
-            <!-- End carousel Deal Hot -->
           </div>
-          <!-- End product content Deal Hot -->
         </div>
-        <!-- End deal hot -->
-
-        <!--=====================================
-              Preload
-              ======================================-->
 
         <div *ngIf="cargando" class="d-flex justify-content-center">
           <div class="spinner-border text-muted my-5"></div>
         </div>
       </div>
+    --></div>
+    <div class="col-xl-8 col-12">
+      <aside class="widget widget_best-sale" data-mh="dealhot">
+        <h3 class="widget-title">Top 20 Best Seller</h3>
+
+        <div class="widget__content">
+          <div
+            class="owl-slider"
+            data-owl-auto="true"
+            data-owl-loop="true"
+            data-owl-speed="5000"
+            data-owl-gap="0"
+            data-owl-nav="false"
+            data-owl-dots="false"
+            data-owl-item="1"
+            data-owl-item-xs="1"
+            data-owl-item-sm="1"
+            data-owl-item-md="1"
+            data-owl-item-lg="1"
+            data-owl-duration="1000"
+            data-owl-mousedrag="on"
+          >
+            <div
+              class="ps-product-group topSalesBlock"
+              *ngFor="let block of topSalesBlock; let lastIndex = last"
+            >
+              {{ lastIndex ? callbackSeller(topSales) : "" }}
+            </div>
+          </div>
+        </div>
+      </aside>
+      <!-- End Aside -->
     </div>
+    <!-- End Columns -->
   </div>
 </div>
-<!-- End Home Deal Hot -->

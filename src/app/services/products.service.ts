@@ -18,4 +18,9 @@ export class ProductsService {
     );
   }
 
+  getFilterData(orderBy, equalTo) {
+    return this.http.get(
+      `${this.api}products.json?orderBy="${orderBy}"&equalTo="${equalTo}"&print=pretty`
+    );
+  }
 }

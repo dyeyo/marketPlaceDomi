@@ -9,6 +9,7 @@ import {
 } from "../../../funtions.js";
 
 import { ProductsService } from "../../../services/products.service";
+import { SalesServicesService } from "../../../services/sales.service";
 
 declare var jQuery: any;
 declare var $: any;
@@ -28,14 +29,17 @@ export class HomeHotTodayComponent implements OnInit {
   topSalesBlock: Array<any> = [];
   renderBestSeller: Boolean = true;
 
-  constructor(private productsService: ProductsService) {}
+  constructor(
+    private productsService: ProductsService,
+    private salesServices: SalesServicesService
+  ) {}
 
   ngOnInit(): void {
     this.cargando = true;
-
     let getProducts = [];
     let hoy = new Date();
     let fechaOferta = null;
+    let getSales = [];
 
     this.productsService.getData().subscribe((resp) => {
       let i;
@@ -61,6 +65,51 @@ export class HomeHotTodayComponent implements OnInit {
           this.indexes.push(i);
           this.cargando = false;
         }
+      }
+    });
+
+    this.salesServices.getData().subscribe((res) => {
+      let i;
+      for (i in res) {
+        getSales.push({
+          product: res[i].product,
+          quantity: res[i].quantity,
+        });
+      }
+      //ORDENAR EL ARRY DE MAYOR A MENOR
+      getSales.sort((a, b) => {
+        return b.quantity - a.quantity;
+      });
+      //SACAMOS LOS REPETIDOS
+      let filterSales = [];
+      getSales.forEach((sale) => {
+        if (!filterSales.find((res) => res.product == sale.product)) {
+          const { product, quantity } = sale;
+          filterSales.push({
+            product,
+            quantity,
+          });
+        }
+      });
+      let block = 0;
+      //FILTAR LA DATA DE LOS PRODUCTOS QUE CONCIDAN EN LAS VENTAS PARA SACAR LOS DATOS DE EL
+      filterSales.forEach((sale, index) => {
+        block++;
+        //SOLO MOSTRAR 20
+        if (index < 20) {
+          this.productsService
+            .getFilterData("name", sale.product)
+            .subscribe((res) => {
+              let i;
+              for (i in res) {
+                this.topSales.push(res);
+              }
+            });
+        }
+      });
+      //MOSTAR 4 PRODUCTOS POR BANNER
+      for (let i = 0; i < Math.round(block / 4); i++) {
+        this.topSalesBlock.push(i);
       }
     });
   }
@@ -189,6 +238,71 @@ export class HomeHotTodayComponent implements OnInit {
           )
         );
       }
+    }
+    OwlCarouselConfig.fnc();
+    CarouselNavigation.fnc();
+    //SlickConfig.fnc();
+    ProductLightbox.fnc();
+    CountDown.fnc();
+  }
+
+  callbackSeller(topSales) {
+    if (this.renderBestSeller) {
+      this.renderBestSeller = false;
+      //CAPTURAR LA CANTIDADA DE BLOQUES QUE TIENE EL DOM
+      let topSalesBlock = $(".topSalesBlock");
+      let top20Array = [];
+
+      setTimeout(() => {
+        for (let i = 0; i < topSalesBlock.length; i++) {
+          //AGRUPARA CON 4 PRODUCTOS
+          top20Array.push(
+            topSales.slice(
+              i * topSalesBlock.length,
+              i * topSalesBlock.length + topSalesBlock.length
+            )
+          );
+
+          let f;
+          for (f in top20Array[i]) {
+            console.log("Categoria", top20Array[i][f].categoty);
+            console.log("Imagen", top20Array[i][f].image);
+            console.log("Nombre", top20Array[i][f].name);
+
+            $(topSalesBlock[i]).append(
+              `
+              <div class="ps-product--horizontal">
+                <div class="ps-product__thumbnail">
+                  <a href="producto/${top20Array[i][f].url}">
+                    <img src="assets/img/products/${top20Array[i][f].category}/${top20Array[i][f].image}"/>
+                  </a>
+                </div>
+
+                <div class="ps-product__content">
+                  <a class="ps-product__title" href="producto/${top20Array[i][f].url}"
+                    >${top20Array[i][f].name}</a
+                  >
+
+                  <div class="ps-product__rating">
+                    <select class="ps-rating" data-read-only="true">
+                      <option value="1">1</option>
+                      <option value="1">2</option>
+                      <option value="1">3</option>
+                      <option value="1">4</option>
+                      <option value="2">5</option>
+                    </select>
+
+                    <span>01</span>
+                  </div>
+
+                  <p class="ps-product__price">105.30</p>
+                </div>
+              </div>
+              `
+            );
+          }
+        }
+      }, topSalesBlock.length * 1000);
     }
     OwlCarouselConfig.fnc();
     CarouselNavigation.fnc();

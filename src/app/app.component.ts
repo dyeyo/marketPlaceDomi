@@ -14,7 +14,6 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     (function ($) {
       "use strict";
-      //var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
       var isMobile = {
         Android: function () {
@@ -206,6 +205,85 @@ export class AppComponent implements OnInit {
         }
       }
 
+      function owlCarouselConfig() {
+        var target = $(".owl-slider");
+        if (target.length > 0) {
+          target.each(function () {
+            var el = $(this),
+              dataAuto = el.data("owl-auto"),
+              dataLoop = el.data("owl-loop"),
+              dataSpeed = el.data("owl-speed"),
+              dataGap = el.data("owl-gap"),
+              dataNav = el.data("owl-nav"),
+              dataDots = el.data("owl-dots"),
+              dataAnimateIn = el.data("owl-animate-in")
+                ? el.data("owl-animate-in")
+                : "",
+              dataAnimateOut = el.data("owl-animate-out")
+                ? el.data("owl-animate-out")
+                : "",
+              dataDefaultItem = el.data("owl-item"),
+              dataItemXS = el.data("owl-item-xs"),
+              dataItemSM = el.data("owl-item-sm"),
+              dataItemMD = el.data("owl-item-md"),
+              dataItemLG = el.data("owl-item-lg"),
+              dataItemXL = el.data("owl-item-xl"),
+              dataNavLeft = el.data("owl-nav-left")
+                ? el.data("owl-nav-left")
+                : "<i class='icon-chevron-left'></i>",
+              dataNavRight = el.data("owl-nav-right")
+                ? el.data("owl-nav-right")
+                : "<i class='icon-chevron-right'></i>",
+              duration = el.data("owl-duration"),
+              datamouseDrag = el.data("owl-mousedrag") == "on" ? true : false;
+            if (
+              target.children("div, span, a, img, h1, h2, h3, h4, h5, h5")
+                .length >= 2
+            ) {
+              el.owlCarousel({
+                animateIn: dataAnimateIn,
+                animateOut: dataAnimateOut,
+                margin: dataGap,
+                autoplay: dataAuto,
+                autoplayTimeout: dataSpeed,
+                autoplayHoverPause: true,
+                loop: dataLoop,
+                nav: dataNav,
+                mouseDrag: datamouseDrag,
+                touchDrag: true,
+                autoplaySpeed: duration,
+                navSpeed: duration,
+                dotsSpeed: duration,
+                dragEndSpeed: duration,
+                navText: [dataNavLeft, dataNavRight],
+                dots: dataDots,
+                items: dataDefaultItem,
+                responsive: {
+                  0: {
+                    items: dataItemXS,
+                  },
+                  480: {
+                    items: dataItemSM,
+                  },
+                  768: {
+                    items: dataItemMD,
+                  },
+                  992: {
+                    items: dataItemLG,
+                  },
+                  1200: {
+                    items: dataItemXL,
+                  },
+                  1680: {
+                    items: dataDefaultItem,
+                  },
+                },
+              });
+            }
+          });
+        }
+      }
+
       function masonry($selector) {
         var masonry = $($selector);
         if (masonry.length > 0) {
@@ -252,7 +330,7 @@ export class AppComponent implements OnInit {
         }
       }
 
-      // function //mapConfig() {
+      // function mapConfig() {
       //     var map = $('#contact-map');
       //     if (map.length > 0) {
       //         map.gmap3({
@@ -382,6 +460,49 @@ export class AppComponent implements OnInit {
         });
       }
 
+      function productLightbox() {
+        var product = $(".ps-product--detail");
+        if (product.length > 0) {
+          $(".ps-product__gallery").lightGallery({
+            selector: ".item a",
+            thumbnail: true,
+            share: false,
+            fullScreen: false,
+            autoplay: false,
+            autoplayControls: false,
+            actualSize: false,
+          });
+          if (product.hasClass("ps-product--sticky")) {
+            $(".ps-product__thumbnail").lightGallery({
+              selector: ".item a",
+              thumbnail: true,
+              share: false,
+              fullScreen: false,
+              autoplay: false,
+              autoplayControls: false,
+              actualSize: false,
+            });
+          }
+        }
+        $(".ps-gallery--image").lightGallery({
+          selector: ".ps-gallery__item",
+          thumbnail: true,
+          share: false,
+          fullScreen: false,
+          autoplay: false,
+          autoplayControls: false,
+          actualSize: false,
+        });
+        $(".ps-video").lightGallery({
+          thumbnail: false,
+          share: false,
+          fullScreen: false,
+          autoplay: false,
+          autoplayControls: false,
+          actualSize: false,
+        });
+      }
+
       function backToTop() {
         var scrollPos = 0;
         var element = $("#back2top");
@@ -480,32 +601,32 @@ export class AppComponent implements OnInit {
         });
       }
 
-      // function countDown() {
-      //   var time = $(".ps-countdown");
-      //   time.each(function () {
-      //     var el = $(this),
-      //       value = $(this).data("time");
-      //     var countDownDate = new Date(value).getTime();
-      //     var timeout = setInterval(function () {
-      //       var now = new Date().getTime(),
-      //         distance = countDownDate - now;
-      //       var days = Math.floor(distance / (1000 * 60 * 60 * 24)),
-      //         hours = Math.floor(
-      //           (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-      //         ),
-      //         minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-      //         seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      //       el.find(".days").html(days);
-      //       el.find(".hours").html(hours);
-      //       el.find(".minutes").html(minutes);
-      //       el.find(".seconds").html(seconds);
-      //       if (distance < 0) {
-      //         clearInterval(timeout);
-      //         el.closest(".ps-section").hide();
-      //       }
-      //     }, 1000);
-      //   });
-      // }
+      function countDown() {
+        var time = $(".ps-countdown");
+        time.each(function () {
+          var el = $(this),
+            value = $(this).data("time");
+          var countDownDate = new Date(value).getTime();
+          var timeout = setInterval(function () {
+            var now = new Date().getTime(),
+              distance = countDownDate - now;
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24)),
+              hours = Math.floor(
+                (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+              ),
+              minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+              seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            el.find(".days").html(days);
+            el.find(".hours").html(hours);
+            el.find(".minutes").html(minutes);
+            el.find(".seconds").html(seconds);
+            if (distance < 0) {
+              clearInterval(timeout);
+              el.closest(".ps-section").hide();
+            }
+          }, 1000);
+        });
+      }
 
       function productFilterToggle() {
         $(".ps-filter__trigger").on("click", function (e) {
@@ -658,6 +779,21 @@ export class AppComponent implements OnInit {
         });
       }
 
+      function carouselNavigation() {
+        var prevBtn = $(".ps-carousel__prev"),
+          nextBtn = $(".ps-carousel__next");
+        prevBtn.on("click", function (e) {
+          e.preventDefault();
+          var target = $(this).attr("href");
+          $(target).trigger("prev.owl.carousel", [1000]);
+        });
+        nextBtn.on("click", function (e) {
+          e.preventDefault();
+          var target = $(this).attr("href");
+          $(target).trigger("next.owl.carousel", [1000]);
+        });
+      }
+
       function dateTimePicker() {
         $(".ps-datepicker").datepicker();
       }
@@ -671,21 +807,22 @@ export class AppComponent implements OnInit {
         productFilterToggle();
         tabs();
         // slickConfig();
-        rating();
+        // productLightbox();
+        // rating();
         backToTop();
         stickyHeader();
         filterSlider();
-        //mapConfig();
+        // mapConfig();
         modalInit();
         searchInit();
-        //countDown();
+        // countDown();
         mainSlider();
         parallax();
-        //stickySidebar();
+        // stickySidebar();
         accordion();
-        progressBar();
+        // progressBar();
         customScrollbar();
-        select2Cofig();
+        // select2Cofig();
         // carouselNavigation();
         dateTimePicker();
         $('[data-toggle="tooltip"]').tooltip();
